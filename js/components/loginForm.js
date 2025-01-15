@@ -56,11 +56,11 @@ export default {
     return {
       data: null,
       auth_uri: null,
-      redirect_uri: window.location.href,
+      redirect_uri: window.location.href.split('index.html')[0],
       client_id: 'client',
       scope: "read",
-      state: this.generateRandomHex(),
-      nonce: this.generateRandomHex().slice(0,-1),
+      state: this.generateState(),
+      nonce: this.generateNonce(),
       response_type: "code",
       code: true,
       token: false,
@@ -75,12 +75,12 @@ export default {
     Array.from(query).forEach(e =>
       this.query = {...this.query, [e[0]]: e[1] }
     )
-    console.log(this.query)
-    // this.query = {
-    //   code: query.has('code')? query.get('code') : null,
-    //   state: query.has('state')? query.get('state') : null,
-    //   nonce: query.has('nonce')? query.get('nonce') : null,
-    // };
+    if (localStorage.getItem('auth_uri') !== null) {
+      this.auth_uri = localStorage.getItem('auth_uri')
+    }
+    if(window.location.host.includes('127.0.0.1') || window.location.host.includes('localhost')) {
+      this.redirect_uri = window.location.href.split('?')[0]
+    }
   },
   watch: {
     auth_uri(cur, prev) {
@@ -125,6 +125,8 @@ export default {
   },
   methods: {
     handleSubmit(e){
+      localStorage.setItem('auth_uri', this.auth_uri);
+      localStorage.setItem('state', this.state);
       window.location.href = this.textarea
     },
     updateTextArea(){
@@ -148,9 +150,16 @@ export default {
       this.response_type = this.code? 'code' : '' +this.token? ' token' : '';
       this.updateTextArea()
     },
-    generateRandomHex() {
+    generateState() {
       let hex = '';
       for (let i = 0; i < 11; i++) {
+        hex += Math.floor(Math.random() * 16).toString(16);
+      }
+      return hex;
+    },
+    generateNonce() {
+      let hex = '';
+      for (let i = 0; i < 10; i++) {
         hex += Math.floor(Math.random() * 16).toString(16);
       }
       return hex;

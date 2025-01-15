@@ -285,7 +285,7 @@ input[type="submit"]:hover, button:hover {
   opacity: 0.8;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], textarea {
   min-width: 230px;
 }
 
@@ -327,7 +327,7 @@ input[type="text"], input[type="number"] {
   opacity: 1;
 }
 
-input {
+input, textarea {
   padding: 5px;
   border-radius: 5px;
   border: none;
@@ -346,13 +346,19 @@ form {
   display: flex;
   gap: 10px;
 }
-.flex .column {
+.column {
   flex-direction: column;
 }
-.flex .row {
+.row {
   flex-direction: row;
 }
-.flex .center {
+.center {
   align-items: center;
   justify-content: center;
+}
+
+fieldset {
+  padding: 10px;
+  border-radius: 5px;
+  border: solid 1px var(--text-color);
 }
